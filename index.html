@@ -1,27 +1,62 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script type="text/javascript" src="./lib/jquery_lite.js"></script>
+    <meta charset='utf-8'>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+    <script type='text/javascript' src='./lib/dominodes.js'></script>
+    <link rel='stylesheet' href='./lib/master.css'>
     <title>Awesome jquery</title>
   </head>
   <body>
-    <div class="banana">
-      Hello, I am the banana div.
-    </div>
-    <div class="pear">
-      This is a pear div.
-    </div>
-    <div class="apple">
-      <ul>
-        <li><a href="google.com">Google</a></li>
-        <li>
-          <ul>
-            <li>hello</li>
+    <h2>dominodes</h2>
+    <section class='container'>
+      <div class='left'>
+        <div class='banana'>
+          Hello, I am the banana div.
+        </div>
+        <div class='pear'>
+          This is a pear div.
+        </div>
+        <div class='apple'>
+          <ul class='cherry'>
+            <li><a href='google.com'>This is a li link to Google</a></li>
+            <li>I'm another li. My siblings and I are inside a grape ul and an apple div.</li>
+            <li>
+              <ul class='blueberry'>
+                <li>I'm a li inside a ul inside a li inside a ul. Listception!!!</li>
+              </ul>
+            </li>
           </ul>
-        </li>
-      </ul>
-    </div>
+        </div>
+      </div>
+
+      <section class='right'>
+        <p>Welcome to the demo for DOMinodes!
+        Enter commands into the console below with <h3>$l</h3> (lowercase L).
+        Click on the Run button to play around.
+        Example: $l('div').addClass('orange')</p>
+
+        Here is some css to play around with:
+        <section>
+          <article>banana = background-color: yellow</article>
+          <article>pear = background-color: lime</article>
+          <article>apple = background-color: red</article>
+          <article>peach = background-color: pink</article>
+          <article>blueberry = background-color: blue</article>
+          <article>orange = background-color: orange</article>
+        </section>
+        <section>
+          <article>mango = color: orange;</article>
+          <article>lime = color: green;</article>
+          <article>lemon = color: yellow;</article>
+          <article>cherry = color: red;</article>
+        </section>
+      </section>
+    </section>
+
+    <form class='input' id='input-form'>
+      <textarea rows='20' cols='100' class='textarea' name='user-input'></textarea>
+      <input type='submit' class='button' value='Run'>
+    </form>
   </body>
 </html>
