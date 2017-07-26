@@ -13,17 +13,10 @@ function handleDrop(e) {
 
   const dragItem = e.dataTransfer.getData('text');
   const dropTargetItem = e.target.parentElement.id;
-  const dragTitle = $('#' + dragItem).text().split(': ')[1];
+  const album = { id: dragItem.split('-')[0], userId: dragItem.split('-')[1]};
 
-  const album = { id: dragItem.split('-')[0], title: dragTitle, userId: dragItem.split('-')[1]};
   updateAlbum(album)
     .then(data => updateUI(data, dragItem, dropTargetItem));
-}
-
-function updateUI(album, dragItem, dropTargetItem) {
-  $(`#` + dragItem).remove();
-  const $newListItem = createListItem(album)
-  $('#' + dropTargetItem).after($newListItem);
 }
 
 function createListItem(album) {
@@ -55,7 +48,7 @@ function createList(albums) {
   return $albumList[0];
 }
 
-function renderAlbums(albums, $userSection) {
+function createAlbumSection(albums, $userSection) {
   const $list = createList(albums);
   $userSection.append($list);
   return $userSection;
@@ -66,6 +59,12 @@ function createUserSection(userData) {
   const $userName = $('<h3>', { 'text': userData.name });
   $section.append($userName);
   return $section[0];
+}
+
+function updateUI(album, dragItem, dropTargetItem) {
+  $(`#` + dragItem).remove();
+  const $newListItem = createListItem(album)
+  $('#' + dropTargetItem).after($newListItem);
 }
 
 function getUser(id, location) {
@@ -95,7 +94,7 @@ function render($root, users, location) {
     $.when(getUser(user, location), getAlbums(user, location))
       .done((userData, albumData) => {
         const $userSection = createUserSection(userData[0]);
-        renderAlbums(albumData[0], $userSection);
+        createAlbumSection(albumData[0], $userSection);
         $root.append($userSection);
       });
   });
