@@ -12,7 +12,7 @@ function handleDrop(e) {
   e.preventDefault();
 
   const dragItem = e.dataTransfer.getData('text');
-  const dropTargetItem = e.target.id;
+  const dropTargetItem = e.target.parentElement.id;
   const dragTitle = $('#' + dragItem).text().split(': ')[1];
 
   const album = { id: dragItem.split('-')[0], title: dragTitle, userId: dragItem.split('-')[1]};
@@ -27,13 +27,16 @@ function updateUI(album, dragItem, dropTargetItem) {
 }
 
 function createListItem(album) {
-  const $listItem = $('<li>', {
+  const $albumId = $('<li>', { 'text': album.id, 'class': 'album-id' });
+  const $albumTitle = $('<li>', { 'text': album.title, 'class': 'album-title'});
+  const $listItem = $('<ul>', {
     'id': `${album.id}-${album.userId}`,
     'class': 'album-item',
     'draggable': true,
     'ondragstart': 'handleDragStart(event)'
-  })
-  .append(`${album.id}: ${album.title}`);
+  });
+
+  $listItem.append($albumId[0]).append($albumTitle[0]);
 
   return $listItem[0];
 }
