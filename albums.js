@@ -15,39 +15,32 @@ function handleDrop(e) {
   const dropTargetItem = e.target.id;
   const dragTitle = $('#' + dragItem).text().split(': ')[1];
 
-  if (dragItem[2] !== dropTargetItem[2]) {
-    const album = { id: dragItem.split('-')[0], title: dragTitle, userId: dragItem.split('-')[1]};
-    updateAlbum(album)
-      .then(data => updateUI(data, dragItem, dropTargetItem));
-  }
+  const album = { id: dragItem.split('-')[0], title: dragTitle, userId: dragItem.split('-')[1]};
+  updateAlbum(album)
+    .then(data => updateUI(data, dragItem, dropTargetItem));
 }
 
 function updateUI(album, dragItem, dropTargetItem) {
   $(`#` + dragItem).remove();
-  createListItem(album).insertAfter('#' + dropTargetItem);
-}
-
-function updateAlbum(album) {
-  return $.ajax({
-    url: `https://jsonplaceholder.typicode.com/albums/${album.id}`,
-    method: 'PATCH',
-    data: album,
-  });
+  const $newListItem = createListItem(album)
+  $('#' + dropTargetItem).after($newListItem);
 }
 
 function createListItem(album) {
   const $listItem = $('<li>', {
     'id': `${album.id}-${album.userId}`,
+    'class': 'album-item',
     'draggable': true,
     'ondragstart': 'handleDragStart(event)'
   })
   .append(`${album.id}: ${album.title}`);
 
-  return $listItem;
+  return $listItem[0];
 }
 
 function createList(albums) {
   const $albumList = $('<ul>', {
+    'class': 'album-list',
     'ondrop': 'handleDrop(event)',
     'ondragover': 'handleDragOver(event)'
   });
@@ -65,12 +58,12 @@ function renderAlbums(albums, $userSection) {
   return $userSection;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const root = document.getElementById('root');
-  const location = 'https://jsonplaceholder.typicode.com';
-  const users = [1,2];
-  render(root, users, location);
-});
+function createUserSection(userData) {
+  const $section = $('<section>', { 'class': 'user-section'});
+  const $userName = $('<h3>', { 'text': userData.name });
+  $section.append($userName);
+  return $section[0];
+}
 
 function getUser(id, location) {
   return $.ajax({
@@ -86,23 +79,28 @@ function getAlbums(id, location) {
   });
 }
 
-function renderUser(userData) {
-  const $section = $('<section>');
-  $section.text(userData.name);
-  return $section[0];
+function updateAlbum(album) {
+  return $.ajax({
+    url: `https://jsonplaceholder.typicode.com/albums/${album.id}`,
+    method: 'PATCH',
+    data: album,
+  });
 }
 
-function getData($root, users, location) {
+function render($root, users, location) {
   users.forEach(user => {
     $.when(getUser(user, location), getAlbums(user, location))
       .done((userData, albumData) => {
-        const $userSection = renderUser(userData[0]);
+        const $userSection = createUserSection(userData[0]);
         renderAlbums(albumData[0], $userSection);
         $root.append($userSection);
       });
   });
 }
 
-function render($root, users, location) {
-  getData($root, users, location);
-}
+document.addEventListener('DOMContentLoaded', () => {
+  const root = document.getElementById('root');
+  const location = 'https://jsonplaceholder.typicode.com';
+  const users = [1,2];
+  render(root, users, location);
+});

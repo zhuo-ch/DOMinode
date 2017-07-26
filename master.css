@@ -1,0 +1,62 @@
+body, div, section, ul, li {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-decoration: inherit;
+  vertical-align: inherit;
+  box-sizing: inherit;
+  background: transparent;
+  opacity: inherit;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: whitesmoke;
+  font-family: 'Open Sans', sans-serif;
+  height: 100%;
+  width: 100%;
+}
+
+#root {
+  display: flex;
+  justify-content: space-around;
+}
+
+.user-section {
+  background-color: white;
+  color: royalblue;
+  border: 2px solid #3d3b3b;
+  border-radius: 10px;
+  padding: 10px;
+  max-height: 280px;
+  overflow: hidden;
+  margin-top: 30px;
+}
+
+.album-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #1145be;
+  border-top: 1px solid #3d3b3b;
+  border-bottom: 1px solid #3d3b3b;
+  max-height: 80%;
+  overflow-y: scroll;
+}
+
+.album-item:hover {
+  cursor: pointer;
+}
+
+.album-item:nth-child(odd) {
+  background-color: gainsboro;
+}
