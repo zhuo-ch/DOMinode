@@ -11,24 +11,33 @@ function handleDragOver(e) {
 function handleDrop(e) {
   e.preventDefault();
 
-  debugger
+  const dragItem = e.dataTransfer.getData('text');
+  const dropTargetItem = e.target.id;
+  const dragTitle = $('#' + dragItem).text().split(': ')[1];
+
+  if (dragItem[2] !== dropTargetItem[2]) {
+    const album = { id: dragItem.split('-')[0], title: dragTitle, userId: dragItem.split('-')[1]};
+    updateAlbum(album)
+      .then(data => updateUI(data, dragItem, dropTargetItem));
+  }
 }
 
-function removeAlbum(id) {
-  delete albums[id];
+function updateUI(album, dragItem, dropTargetItem) {
+  $(`#` + dragItem).remove();
+  createListItem(album).insertAfter('#' + dropTargetItem);
 }
 
-function addAlbum(album) {
-
-}
-
-function formatAlbums(albums) {
-  albums.forEach(album => albums[album.id] = album);
+function updateAlbum(album) {
+  return $.ajax({
+    url: `https://jsonplaceholder.typicode.com/albums/${album.id}`,
+    method: 'PATCH',
+    data: album,
+  });
 }
 
 function createListItem(album) {
   const $listItem = $('<li>', {
-    'id': `${album.id},${album.title},${album.userId}`,
+    'id': `${album.id}-${album.userId}`,
     'draggable': true,
     'ondragstart': 'handleDragStart(event)'
   })
