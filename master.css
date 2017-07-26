@@ -49,6 +49,7 @@ body {
   color: #1145be;
   border-top: 1px solid #3d3b3b;
   border-bottom: 1px solid #3d3b3b;
+  min-height: 10%;
   max-height: 80%;
   overflow-y: scroll;
 }

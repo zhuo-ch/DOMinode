@@ -12,11 +12,10 @@ function handleDrop(e) {
   e.preventDefault();
 
   const dragItem = e.dataTransfer.getData('text');
-  const dropTargetItem = e.target.parentElement.id;
   const album = { id: dragItem.split('-')[0], userId: dragItem.split('-')[1]};
 
   updateAlbum(album)
-    .then(data => updateUI(data, dragItem, dropTargetItem));
+    .then(data => updateUI(data, dragItem, e));
 }
 
 function createListItem(album) {
@@ -61,10 +60,15 @@ function createUserSection(userData) {
   return $section[0];
 }
 
-function updateUI(album, dragItem, dropTargetItem) {
+function updateUI(album, dragItem, e) {
   $(`#` + dragItem).remove();
-  const $newListItem = createListItem(album)
-  $('#' + dropTargetItem).after($newListItem);
+  const $newListItem = createListItem(album);
+  
+  if (e.target.parentElement.id) {
+    $('#' + e.target.parentElement.id).after($newListItem);
+  } else {
+    e.target.append($newListItem);
+  }
 }
 
 function getUser(id, location) {
