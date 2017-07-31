@@ -19,9 +19,9 @@ function handleDrop(e) {
 }
 
 function createListItem(album) {
-  const $albumId = $('<li>', { 'text': album.id, 'class': 'album-id' });
-  const $albumTitle = $('<li>', { 'text': album.title, 'class': 'album-title'});
-  const $listItem = $('<ul>', {
+  const $albumId = $l('<li>', { 'text': album.id, 'class': 'album-id' });
+  const $albumTitle = $l('<li>', { 'text': album.title, 'class': 'album-title'});
+  const $listItem = $l('<ul>', {
     'id': `${album.id}-${album.userId}`,
     'class': 'album-item',
     'draggable': true,
@@ -34,7 +34,7 @@ function createListItem(album) {
 }
 
 function createList(albums) {
-  const $albumList = $('<ul>', {
+  const $albumList = $l('<ul>', {
     'class': 'album-list',
     'ondrop': 'handleDrop(event)',
     'ondragover': 'handleDragOver(event)'
@@ -54,39 +54,39 @@ function createAlbumSection(albums, $userSection) {
 }
 
 function createUserSection(userData) {
-  const $section = $('<section>', { 'class': 'user-section'});
-  const $userName = $('<h3>', { 'text': userData.name });
+  const $section = $l('<section>', { 'class': 'user-section'});
+  const $userName = $l('<h3>', { 'text': userData.name });
   $section.append($userName);
   return $section[0];
 }
 
 function updateUI(album, dragItem, e) {
-  $(`#` + dragItem).remove();
+  $l(`#` + dragItem).remove();
   const $newListItem = createListItem(album);
-  
+
   if (e.target.parentElement.id) {
-    $('#' + e.target.parentElement.id).after($newListItem);
+    $l('#' + e.target.parentElement.id).after($newListItem);
   } else {
     e.target.append($newListItem);
   }
 }
 
 function getUser(id, location) {
-  return $.ajax({
+  return $l.ajax({
     url: `${location}/users/${id}`,
     method: 'GET',
   });
 }
 
 function getAlbums(id, location) {
-  return $.ajax({
+  return $l.ajax({
     url: `${location}/albums?userId=${id}`,
     method: 'GET',
   });
 }
 
 function updateAlbum(album) {
-  return $.ajax({
+  return $l.ajax({
     url: `https://jsonplaceholder.typicode.com/albums/${album.id}`,
     method: 'PATCH',
     data: album,
