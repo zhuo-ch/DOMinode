@@ -12,29 +12,27 @@ function handleDrop(e) {
   e.preventDefault();
 
   const dragItem = e.dataTransfer.getData('text');
-  const album = { id: dragItem.split('-')[0], userId: dragItem.split('-')[1]};
-
+  const album = { id: dragItem.split('-')[1], userId: dragItem.split('-')[0]};
   updateAlbum(album)
     .then(data => updateUI(data, dragItem, e));
 }
 
 function createListItem(album) {
-  const $albumId = $l('<li>', { 'text': album.id, 'class': 'album-id' });
-  const $albumTitle = $l('<li>', { 'text': album.title, 'class': 'album-title'});
-  const $listItem = $l('<ul>', {
-    'id': `${album.id}-${album.userId}`,
+  const $albumId = $('<li>', { 'text': album.id, 'class': 'album-id' });
+  const $albumTitle = $('<li>', { 'text': album.title, 'class': 'album-title'});
+  const $listItem = $('<ul>', {
+    'id': `${album.userId}-${album.id}`,
     'class': 'album-item',
     'draggable': true,
     'ondragstart': 'handleDragStart(event)'
   });
-
-  $listItem.append($albumId[0]).append($albumTitle[0]);
+  $listItem.append($albumId).append($albumTitle);
 
   return $listItem[0];
 }
 
 function createList(albums) {
-  const $albumList = $l('<ul>', {
+  const $albumList = $('<ul>', {
     'class': 'album-list',
     'ondrop': 'handleDrop(event)',
     'ondragover': 'handleDragOver(event)'
@@ -54,18 +52,18 @@ function createAlbumSection(albums, $userSection) {
 }
 
 function createUserSection(userData) {
-  const $section = $l('<section>', { 'class': 'user-section'});
-  const $userName = $l('<h3>', { 'text': userData.name });
+  const $section = $('<section>', { 'class': 'user-section'});
+  const $userName = $('<h3>', { 'text': userData.name });
   $section.append($userName);
   return $section[0];
 }
 
 function updateUI(album, dragItem, e) {
-  $l(`#` + dragItem).remove();
+  $l("#\\3" + dragItem).remove();
   const $newListItem = createListItem(album);
 
   if (e.target.parentElement.id) {
-    $l('#' + e.target.parentElement.id).after($newListItem);
+    $('#' + e.target.parentElement.id).after($newListItem);
   } else {
     e.target.append($newListItem);
   }
@@ -97,8 +95,8 @@ function render($root, users, location) {
   users.forEach(user => {
     $.when(getUser(user, location), getAlbums(user, location))
       .done((userData, albumData) => {
-        const $userSection = createUserSection(userData[0]);
-        createAlbumSection(albumData[0], $userSection);
+        const $userSection = createUserSection(userData);
+        createAlbumSection(albumData, $userSection);
         $root.append($userSection);
       });
   });

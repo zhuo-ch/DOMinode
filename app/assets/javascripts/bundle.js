@@ -87,6 +87,11 @@ var DOMNodeCollection = function () {
   }
 
   _createClass(DOMNodeCollection, [{
+    key: "each",
+    value: function each(func) {
+      this.nodes.forEach(func);
+    }
+  }, {
     key: "html",
     value: function html(string) {
       if (typeof string === "undefined") {
@@ -100,7 +105,7 @@ var DOMNodeCollection = function () {
   }, {
     key: "empty",
     value: function empty() {
-      this.elements.forEach(function (el) {
+      this.each(function (el) {
         return el.innerHTML = "";
       });
     }
@@ -153,29 +158,29 @@ var DOMNodeCollection = function () {
   }, {
     key: "children",
     value: function children() {
-      var children_arr = [];
+      var childrenArr = [];
       this.elements.forEach(function (el) {
-        children_arr.push(el.children);
+        childrenArr.push(el.children);
       });
-      return new DOMNodeCollection(children_arr);
+      return new DOMNodeCollection(childrenArr);
     }
   }, {
     key: "parent",
     value: function parent() {
-      var parents_arr = [];
+      var parentsArr = [];
       this.elements.forEach(function (el) {
-        if (!parents_arr.includes(el.parentNode)) {
-          parents_arr.push(el.parentNode);
+        if (!parentsArr.includes(el.parentNode)) {
+          parentsArr.push(el.parentNode);
         }
       });
-      return new DOMNodeCollection(parents_arr);
+      return new DOMNodeCollection(parentsArr);
     }
   }, {
     key: "find",
     value: function find(selector) {
       var descendants = [];
       this.elements.forEach(function (el) {
-        var all_desc = el.querySelectorAll(selector);
+        var allDesc = el.querySelectorAll(selector);
         descendants.push(all_desc);
       });
       return new DOMNodeCollection(descendants);
@@ -253,8 +258,6 @@ module.exports = DOMNodeCollection;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-// import BenchBnb from '../frontend/bench_bnb';
-
 var DOMNodeCollection = __webpack_require__(0);
 
 var documentReady = false;
@@ -268,13 +271,23 @@ var checkCall = function checkCall(func) {
   }
 };
 
+var getNodes = function getNodes(selector) {
+  var nodes = document.querySelectorAll(selector);
+  var nodesArr = Array.from(nodes);
+
+  return new DOMNodeCollection(nodesArr);
+};
+
 var $l = function $l(arg) {
-  switch (typeof arg === "undefined" ? "undefined" : _typeof(arg)) {
-    case "function":
+  switch (typeof arg === 'undefined' ? 'undefined' : _typeof(arg)) {
+    case 'function':
       return checkCall(arg);
-    case "string":
-      arg = document.querySelectorAll(arg);
-      break;
+    case 'string':
+      return getNodes(arg);
+    case 'object':
+      if (arg instanceof HTMLElement) {
+        return new DOMNodeCollection([arg]);
+      }
     default:
       break;
   }
@@ -314,8 +327,8 @@ $l.ajax = function (options) {
 
     xhr.onload = function () {
       if (xhr.status === 200) {
-        request.success(xhr.response);
-        resolve(xhr.response);
+        request.success(JSON.parse(xhr.response));
+        resolve(JSON.parse(xhr.response));
       } else {
         request.error(xhr.response);
         reject({ status: xhr.status, statusText: xhr.statusText });
@@ -326,31 +339,30 @@ $l.ajax = function (options) {
   });
 };
 
-function evalInput(e) {
-  e.preventDefault();
-  var str = e.currentTarget.elements[0].value;
-  eval(str);
-}
+// function evalInput(e) {
+//   e.preventDefault();
+//   const str = e.currentTarget.elements[0].value;
+//   eval(str);
+// }
+//
+// function preventEnter(e) {
+//   if (e.key === 'Enter') {
+//     e.preventDefault();
+//   }
+// }
 
-function preventEnter(e) {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-  }
-}
-
+// module.exports = $l;
 window.$l = $l;
 
-document.addEventListener('DOMContentLoaded', function () {
-  document.addEventListener('keydown', preventEnter);
-  documentReady = true;
-  awaitingCalls.forEach(function (call) {
-    return call();
-  });
-  var inputForm = document.getElementById('input-form');
-  inputForm.addEventListener('submit', evalInput);
-  var root = document.getElementById('root');
-  ReactDom.render(BenchBnb, root);
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//   // document.addEventListener('keydown', preventEnter);
+//   documentReady = true;
+//   awaitingCalls.forEach((call) => call());
+//   const inputForm = document.getElementById('input-form');
+//   inputForm.addEventListener('submit', evalInput);
+//   const root = document.getElementById('root');
+//   ReactDom.render(BenchBnb, root);
+// })
 
 /***/ })
 /******/ ]);
