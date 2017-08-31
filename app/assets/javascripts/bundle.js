@@ -250,31 +250,6 @@ var DOMNodeCollection = function () {
 
 module.exports = DOMNodeCollection;
 
-// on (e, callback) {
-//   this.elements.forEach((el) => {
-//     el.addEventListener(e, callback);
-//     if (this[`${e}`]) {
-//       this[`${e}`] = this[`${e}`].concat([callback]);
-//     } else {
-//       this[`${e}`] = [callback];
-//     }
-//   });
-// }
-
-// attr() {
-//   let all_matches = [];
-//   for (let j = 0; j < this.elements.length; j++) {
-//     let outer = this.elements[j].outerHTML;
-//     let matches = outer.match(/(\S+)[="]/g);
-//     all_matches = all_matches.concat(matches);
-//   }
-//   return all_matches;
-// }
-
-
-// /(\S+)[=]/
-// /\"(\S+)\"/
-
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -372,30 +347,7 @@ $l.ajax = function (options) {
   });
 };
 
-// function evalInput(e) {
-//   e.preventDefault();
-//   const str = e.currentTarget.elements[0].value;
-//   eval(str);
-// }
-//
-// function preventEnter(e) {
-//   if (e.key === 'Enter') {
-//     e.preventDefault();
-//   }
-// }
-
-// module.exports = $l;
 window.$l = $l;
-
-// document.addEventListener('DOMContentLoaded', () => {
-//   // document.addEventListener('keydown', preventEnter);
-//   documentReady = true;
-//   awaitingCalls.forEach((call) => call());
-//   const inputForm = document.getElementById('input-form');
-//   inputForm.addEventListener('submit', evalInput);
-//   const root = document.getElementById('root');
-//   ReactDom.render(BenchBnb, root);
-// })
 
 /***/ })
 /******/ ]);

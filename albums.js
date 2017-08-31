@@ -58,9 +58,6 @@ function createAlbumSection(albums, $userSection) {
 }
 
 function createUserSection(userData) {
-  // const $section = $('<section>', {class: 'user-section'});
-  // const $userName = $('<h3>', {text: userData.name});
-  // $section.append($userName);
   const $section = $l('<section>');
   $section.attr({ class: 'user-section'});
   const $userName = $l('<h3>');
@@ -113,18 +110,10 @@ function render($root, users, location) {
       });
   });
 }
-//
-// function google(){
-//   return $.ajax({
-//     url: "http://maps.googleapis.com/maps/api/places/nearbysearch/json?query=restaurants+in+new+york+city&key=AIzaSyAeVMSLdmpBKIaDUmSZm2xhhIxQhXSZmxY",
-//     method: 'GET',
-//   });
-// }
 
 document.addEventListener('DOMContentLoaded', () => {
   const root = document.getElementById('root');
   const location = 'https://jsonplaceholder.typicode.com';
   const users = [1,2];
   render(root, users, location);
-  // google().then(data => console.log(data));
 });
