@@ -12,27 +12,32 @@ function handleDrop(e) {
   e.preventDefault();
 
   const dragItem = e.dataTransfer.getData('text');
-  const album = { id: dragItem.split('-')[1], userId: dragItem.split('-')[0]};
+  const album = { id: dragItem.split('-')[2], userId: dragItem.split('-')[1]};
   updateAlbum(album)
     .then(data => updateUI(data, dragItem, e));
 }
 
 function createListItem(album) {
-  const $albumId = $('<li>', { 'text': album.id, 'class': 'album-id' });
-  const $albumTitle = $('<li>', { 'text': album.title, 'class': 'album-title'});
-  const $listItem = $('<ul>', {
-    'id': `${album.userId}-${album.id}`,
+  const $albumId = $l('<li>') ;
+  $albumId.attr({ 'text': album.id, 'class': 'album-id' });
+  const $albumTitle = $l('<li>');
+  $albumTitle.attr({ 'text': album.title, 'class': 'album-title'});
+  const $listItem = $l('<ul>');
+  $listItem.attr({
+    'id': `list-${album.userId}-${album.id}`,
     'class': 'album-item',
     'draggable': true,
     'ondragstart': 'handleDragStart(event)'
   });
+
   $listItem.append($albumId).append($albumTitle);
 
   return $listItem[0];
 }
 
 function createList(albums) {
-  const $albumList = $('<ul>', {
+  const $albumList = $l('<ul>')
+  $albumList.attr({
     'class': 'album-list',
     'ondrop': 'handleDrop(event)',
     'ondragover': 'handleDragOver(event)'
@@ -48,18 +53,25 @@ function createList(albums) {
 function createAlbumSection(albums, $userSection) {
   const $list = createList(albums);
   $userSection.append($list);
+
   return $userSection;
 }
 
 function createUserSection(userData) {
-  const $section = $('<section>', { 'class': 'user-section'});
-  const $userName = $('<h3>', { 'text': userData.name });
+  // const $section = $('<section>', {class: 'user-section'});
+  // const $userName = $('<h3>', {text: userData.name});
+  // $section.append($userName);
+  const $section = $l('<section>');
+  $section.attr({ class: 'user-section'});
+  const $userName = $l('<h3>');
+  $userName.attr({ 'text': userData.name });
   $section.append($userName);
+
   return $section[0];
 }
 
 function updateUI(album, dragItem, e) {
-  $l("#\\3" + dragItem).remove();
+  $l('#' + dragItem).remove();
   const $newListItem = createListItem(album);
 
   if (e.target.parentElement.id) {
@@ -101,10 +113,18 @@ function render($root, users, location) {
       });
   });
 }
+//
+// function google(){
+//   return $.ajax({
+//     url: "http://maps.googleapis.com/maps/api/places/nearbysearch/json?query=restaurants+in+new+york+city&key=AIzaSyAeVMSLdmpBKIaDUmSZm2xhhIxQhXSZmxY",
+//     method: 'GET',
+//   });
+// }
 
 document.addEventListener('DOMContentLoaded', () => {
   const root = document.getElementById('root');
   const location = 'https://jsonplaceholder.typicode.com';
   const users = [1,2];
   render(root, users, location);
+  // google().then(data => console.log(data));
 });

@@ -73,17 +73,24 @@
 "use strict";
 
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DOMNodeCollection = function () {
   function DOMNodeCollection(array) {
+    var _this = this;
+
     _classCallCheck(this, DOMNodeCollection);
 
     this.elements = array;
     this.on = this.on.bind(this);
     this.off = this.off.bind(this);
+    this.elements.forEach(function (el, idx) {
+      return _this[idx] = el;
+    });
   }
 
   _createClass(DOMNodeCollection, [{
@@ -121,22 +128,41 @@ var DOMNodeCollection = function () {
       for (var i = 0; i < args.length; i++) {
         if (typeof args[i] === "string") {
           outer = args[i];
+        } else if (args[i] instanceof DOMNodeCollection) {
+          outer = args[i].elements[0].outerHTML;
         } else {
           outer = args[i].outerHTML;
         }
+
         for (var j = 0; j < this.elements.length; j++) {
           var inner = this.elements[j].innerHTML + outer;
           this.elements[j].innerHTML = inner;
         }
       }
+
+      return this;
     }
   }, {
     key: "attr",
     value: function attr() {
-      if (arguments.length === 1) {
-        return this.elements[0].getAttribute(arguments.length <= 0 ? undefined : arguments[0]);
-      } else if (arguments.length === 2) {
-        return this.elements[0].setAttribute(arguments.length <= 0 ? undefined : arguments[0], arguments.length <= 1 ? undefined : arguments[1]);
+      for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
+      }
+
+      if (args.length === 1) {
+        if (_typeof(args[0]) === 'object') {
+          for (var prop in args[0]) {
+            if (prop === 'text') {
+              this.elements[0].innerHTML = args[0][prop];
+            } else {
+              this.elements[0].setAttribute(prop, args[0][prop]);
+            }
+          }
+        } else {
+          return this.elements[0].getAttribute(args[0]);
+        }
+      } else if (args.length === 2) {
+        return this.elements[0].setAttribute(args[0], args[1]);
       }
     }
   }, {
@@ -272,8 +298,15 @@ var checkCall = function checkCall(func) {
 };
 
 var getNodes = function getNodes(selector) {
-  var nodes = document.querySelectorAll(selector);
-  var nodesArr = Array.from(nodes);
+  var nodes = void 0;
+
+  if (selector[0] === '<' && selector[selector.length - 1] === '>') {
+    nodes = [document.createElement(selector.slice(1, selector.length - 1))];
+  } else {
+    nodes = document.querySelectorAll(selector);
+  }
+
+  var nodesArr = nodes.length < 1 ? [document.createElement(selector)] : Array.from(nodes);
 
   return new DOMNodeCollection(nodesArr);
 };
